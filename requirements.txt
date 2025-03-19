@@ -1,0 +1,4 @@
+openai==1.45.0
+selenium==4.15.2
+pillow==10.4
+google-generativeai==0.8.4
