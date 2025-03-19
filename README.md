@@ -1,5 +1,14 @@
 # Webvoyager using gemini_model
 
+## GitHub repository URL
+[GitHub repository](https://github.com/NathanChang86/Webvoyager-using-Gemini)
+
+## Project Description 
+This project is an Agentic AI system designed to automate web interactions using LLMs like GPT-4 or Gemini. The system follows a reflexive perception-decision-action cycle and supports multimodal input (screenshot + element info).  
+This implementation is based on and adapted from the **WebVoyager** framework.
+[WebVoyager Paper](https://arxiv.org/abs/2401.13919)
+
+
 ## Setup Environment
 
 We use Selenium to build the online web browsing environment. 
