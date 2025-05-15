@@ -1,0 +1,75 @@
+{
+    "task_question": "Find the least recently updated repository on GitHub that was created after 2025-01-01, has at least 2000 stars and no more than 100 forks, then just tell me this repository's name and author.",
+    "userInteraction_recording": [
+        {
+            "Interaction_Step": 0,
+            "Actual_Interaction": "Start from the website at https://google.com/.",
+            "Executed_On_URL": "None URL"
+        },
+        {
+            "Interaction_Step": 1,
+            "Actual_Interaction": "Click on DIV at position (666, 245)",
+            "Executed_On_URL": "https://www.google.com/"
+        },
+        {
+            "Interaction_Step": 2,
+            "Actual_Interaction": "Input \"advanced search github\" into TEXTAREA",
+            "Executed_On_URL": "https://www.google.com/"
+        },
+        {
+            "Interaction_Step": 3,
+            "Actual_Interaction": "Click on element with text \"Advanced options\nFrom these owners\nIn these repositories\nCreated on the dates\nWritten in this langua\"",
+            "Executed_On_URL": "https://github.com/search/advanced"
+        },
+        {
+            "Interaction_Step": 4,
+            "Actual_Interaction": "Input \">2025-01-01\" into INPUT",
+            "Executed_On_URL": "https://github.com/search/advanced"
+        },
+        {
+            "Interaction_Step": 5,
+            "Actual_Interaction": "Click on element with text \"Advanced options\nFrom these owners\nIn these repositories\nCreated on the dates\nWritten in this langua\"",
+            "Executed_On_URL": "https://github.com/search/advanced"
+        },
+        {
+            "Interaction_Step": 6,
+            "Actual_Interaction": "Input \">2000\" into INPUT",
+            "Executed_On_URL": "https://github.com/search/advanced"
+        },
+        {
+            "Interaction_Step": 7,
+            "Actual_Interaction": "Click on element with text \"Advanced options\nFrom these owners\nIn these repositories\nCreated on the dates\nWritten in this langua\"",
+            "Executed_On_URL": "https://github.com/search/advanced"
+        },
+        {
+            "Interaction_Step": 8,
+            "Actual_Interaction": "Input \"<=100\" into INPUT",
+            "Executed_On_URL": "https://github.com/search/advanced"
+        },
+        {
+            "Interaction_Step": 9,
+            "Actual_Interaction": "Scroll down with total_distance: 1527.199951171875",
+            "Executed_On_URL": "https://github.com/search/advanced"
+        },
+        {
+            "Interaction_Step": 10,
+            "Actual_Interaction": "Click on element with text \"Search\"",
+            "Executed_On_URL": "https://github.com/search/advanced"
+        },
+        {
+            "Interaction_Step": 11,
+            "Actual_Interaction": "Click on element with text \"Sort by: Best match\"",
+            "Executed_On_URL": "https://github.com/search?q=created%3A%3E2025-01-01+stars%3A%3E2000+forks%3A%3C%3D100&type=Repositories&ref=advsearch&l=&l="
+        },
+        {
+            "Interaction_Step": 12,
+            "Actual_Interaction": "Click on element with text \"Least recently updated\"",
+            "Executed_On_URL": "https://github.com/search?q=created%3A%3E2025-01-01+stars%3A%3E2000+forks%3A%3C%3D100&type=Repositories&ref=advsearch&l=&l="
+        },
+        {
+            "Interaction_Step": 13,
+            "Actual_Interaction": "Task Completed",
+            "Executed_On_URL": "https://github.com/search?q=created%3A%3E2025-01-01+stars%3A%3E2000+forks%3A%3C%3D100&type=Repositories&ref=advsearch&l=&l=&s=updated&o=asc"
+        }
+    ]
+}

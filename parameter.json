@@ -1,0 +1,16 @@
+{
+    "api_key": "Your gemini api_key",
+    "gemini_model": "gemini-2.0-flash",
+    "test_file": "data/tasks_test.jsonl",
+    "userDemo_file": "data/user_demo.jsonl",
+    "manual_db": "data/manual_db",
+    "all_manual_pdf": "data/all_manual_pdf",
+    "all_manual_userDemo": "data/all_manual_userDemo",
+    "output_dir": "results",
+    "download_dir": "downloads",
+    "max_iter": 30,
+    "max_attached_imgs": 3,
+    "RPM": 15,
+    "temperature": 1,
+    "text_only": false
+}

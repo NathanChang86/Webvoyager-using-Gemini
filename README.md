@@ -22,13 +22,24 @@ We use Selenium to build the online web browsing environment.
     ```
 
 ## Running
+### setting up the environment
+ - Modify the gemini_api_key in `parameter.json`
+
+### User_demo
+ - If you want to demo the iteraction, you can use this code by following command:
+```
+python user_action_recorder.py
+```
+
+### Initialize vector database
+ - If you add new manuals, like pdf_manuals or user_demo_manuals, you need to run this code to add this munuals into vector_db
+ - You can use this code by following command:
+```
+python initialize_vactor_db.py
+```
 
 ### Running WebVoyager
-After setting up the environment, you can start running WebVoyager. 
-
- 1. Modify the gemini_api_key in `run.sh`
-
 You can run WebVoyager with the following command:
-```bash 
-bash run.sh
+```
+python run.py
 ```

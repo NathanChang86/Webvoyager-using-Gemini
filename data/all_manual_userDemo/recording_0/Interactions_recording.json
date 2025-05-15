@@ -1,0 +1,95 @@
+{
+    "task_question": "Search for the latest research papers on quantum computing submitted to ArXiv from 2024-01-01 to 2024-01-31.",
+    "userInteraction_recording": [
+        {
+            "Interaction_Step": 0,
+            "Actual_Interaction": "Start from the website at https://arxiv.org/.",
+            "Executed_On_URL": "None URL"
+        },
+        {
+            "Interaction_Step": 1,
+            "Actual_Interaction": "Click on element with text \"Advanced Search\"",
+            "Executed_On_URL": "https://arxiv.org/"
+        },
+        {
+            "Interaction_Step": 2,
+            "Actual_Interaction": "Click on element with text \"Search term\"",
+            "Executed_On_URL": "https://arxiv.org/search/advanced"
+        },
+        {
+            "Interaction_Step": 3,
+            "Actual_Interaction": "Input \"quantum computing\" into INPUT",
+            "Executed_On_URL": "https://arxiv.org/search/advanced"
+        },
+        {
+            "Interaction_Step": 4,
+            "Actual_Interaction": "Scroll down with total_distance: 326.3999938964844",
+            "Executed_On_URL": "https://arxiv.org/search/advanced"
+        },
+        {
+            "Interaction_Step": 5,
+            "Actual_Interaction": "Click on element with text \" Date range\"",
+            "Executed_On_URL": "https://arxiv.org/search/advanced"
+        },
+        {
+            "Interaction_Step": 6,
+            "Actual_Interaction": "Input \"date_range\" into INPUT",
+            "Executed_On_URL": "https://arxiv.org/search/advanced"
+        },
+        {
+            "Interaction_Step": 7,
+            "Actual_Interaction": "Click on DIV at position (182, 545)",
+            "Executed_On_URL": "https://arxiv.org/search/advanced"
+        },
+        {
+            "Interaction_Step": 8,
+            "Actual_Interaction": "Input \"2024-01-01\" into INPUT",
+            "Executed_On_URL": "https://arxiv.org/search/advanced"
+        },
+        {
+            "Interaction_Step": 9,
+            "Actual_Interaction": "Click on DIV at position (263, 548)",
+            "Executed_On_URL": "https://arxiv.org/search/advanced"
+        },
+        {
+            "Interaction_Step": 10,
+            "Actual_Interaction": "Input \"2024-01-31\" into INPUT",
+            "Executed_On_URL": "https://arxiv.org/search/advanced"
+        },
+        {
+            "Interaction_Step": 11,
+            "Actual_Interaction": "Scroll down with total_distance: 240.00003051757812",
+            "Executed_On_URL": "https://arxiv.org/search/advanced"
+        },
+        {
+            "Interaction_Step": 12,
+            "Actual_Interaction": "Click on element with text \"Search term(s)\nSearch term\nField to search\nTitle\nAuthor(s)\nAbstract\nComments\nJournal reference\nACM c\"",
+            "Executed_On_URL": "https://arxiv.org/search/advanced"
+        },
+        {
+            "Interaction_Step": 13,
+            "Actual_Interaction": "Click on element with text \"Announcement date (newest first)\nAnnouncement date (oldest first)\nSubmission date (newest first)\nSub\"",
+            "Executed_On_URL": "https://arxiv.org/search/advanced?advanced=1&terms-0-operator=AND&terms-0-term=quantum+computing&terms-0-field=title&classification-physics_archives=all&classification-include_cross_list=include&date-year=&date-filter_by=date_range&date-from_date=2024-01-01&date-to_date=2024-01-31&date-date_type=submitted_date&abstracts=show&size=50&order=-announced_date_first"
+        },
+        {
+            "Interaction_Step": 14,
+            "Actual_Interaction": "Select \"Submission date (newest first)\" in SELECT",
+            "Executed_On_URL": "https://arxiv.org/search/advanced?advanced=1&terms-0-operator=AND&terms-0-term=quantum+computing&terms-0-field=title&classification-physics_archives=all&classification-include_cross_list=include&date-year=&date-filter_by=date_range&date-from_date=2024-01-01&date-to_date=2024-01-31&date-date_type=submitted_date&abstracts=show&size=50&order=-announced_date_first"
+        },
+        {
+            "Interaction_Step": 15,
+            "Actual_Interaction": "Click on element with text \"Go\"",
+            "Executed_On_URL": "https://arxiv.org/search/advanced?advanced=1&terms-0-operator=AND&terms-0-term=quantum+computing&terms-0-field=title&classification-physics_archives=all&classification-include_cross_list=include&date-year=&date-filter_by=date_range&date-from_date=2024-01-01&date-to_date=2024-01-31&date-date_type=submitted_date&abstracts=show&size=50&order=-announced_date_first"
+        },
+        {
+            "Interaction_Step": 16,
+            "Actual_Interaction": "Click on element with text \"arXiv:2401.16875\"",
+            "Executed_On_URL": "https://arxiv.org/search/advanced?advanced=1&terms-0-term=quantum+computing&terms-0-operator=AND&terms-0-field=title&classification-physics_archives=all&classification-include_cross_list=include&date-filter_by=date_range&date-year=&date-from_date=2024-01-01&date-to_date=2024-01-31&date-date_type=submitted_date&abstracts=show&size=50&order=-submitted_date"
+        },
+        {
+            "Interaction_Step": 17,
+            "Actual_Interaction": "Task Completed",
+            "Executed_On_URL": "https://arxiv.org/abs/2401.16875"
+        }
+    ]
+}
