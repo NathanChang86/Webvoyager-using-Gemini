@@ -76,14 +76,14 @@ def inject_script(driver_task):
                 window.__processingPopstate__ = false;
                 let lastScrollY = window.scrollY;
 
-                // *** 修改部分 1：優化 clickListener，完全避免干擾 <select> ***
+                // *** 修改部分 1：優化 clickListener，移除對 Google 搜索建議的過濾 ***
                 const clickListener = function(event) {
                     if (event.__processed__) return;
                     const now = new Date().getTime();
-                    if (now - lastClickTimestamp < 100) return;
+                    if (now - lastClickTimestamp < 50) return; // 恢復 Old 版本的 50ms 間隔
 
-                    // 檢查是否為下拉選單相關元素
-                    const isDropdown = event.target.closest('select, option, [role="listbox"], [role="option"], .dropdown, .dropdown-menu');
+                    // 檢查是否為下拉選單相關元素，移除 [role="listbox"] 和 [role="option"]
+                    const isDropdown = event.target.closest('select, option, .dropdown, .dropdown-menu');
                     if (isDropdown) {
                         // 記錄 select/option 的點擊，但不干擾事件
                         if (event.target.tagName === 'SELECT' || event.target.tagName === 'OPTION') {
@@ -148,8 +148,9 @@ def inject_script(driver_task):
                         sessionStorage.setItem('userInteractions', JSON.stringify(window.userInteractions));
                     }
                 };
+                // *** 修改部分 2：恢復捕獲階段，與 Old 版本一致 ***
                 window.__clickListener = clickListener;
-                document.addEventListener('click', clickListener, false);
+                document.addEventListener('click', clickListener, true);
 
                 // 添加對綠框覆蓋層的點擊監聽
                 const okPromptListener = function(event) {
@@ -305,255 +306,16 @@ def inject_script(driver_task):
                 }, 300);
             });
 
-            // *** 修改部分 2：優化 MutationObserver，避免不必要重新注入 ***
-            const observer = new MutationObserver((mutations) => {
-                for (const mutation of mutations) {
-                    if (mutation.type === 'childList' && mutation.target === document.documentElement) {
-                        if (window.__lastInjectedBody__ !== document.body) {
-                            window.__userInteractionInjected__ = false;
-                            setupUserInteractionListener();
-                            break;
-                        }
-                    }
+            // *** 修改部分 3：恢復 Old 版本的 MutationObserver 配置 ***
+            const observer = new MutationObserver(() => {
+                if (window.__lastInjectedBody__ !== document.body) {
+                    window.__userInteractionInjected__ = false;
+                    setupUserInteractionListener();
                 }
             });
-            observer.observe(document.documentElement, { childList: true, subtree: false });
+            observer.observe(document.documentElement, { childList: true, subtree: true });
         })();
     """)
-
-# def inject_script(driver_task):
-#     driver_task.execute_script("""
-#         (function() {
-#             function setupUserInteractionListener() {
-#                 if (window.__userInteractionInjected__ && window.__lastInjectedBody__ === document.body) {
-#                     console.log('[INFO] Script already injected, skipping.');
-#                     return;
-#                 }
-#                 console.log('[INFO] Injecting interaction listeners.');
-                
-#                 // 移除舊監聽器
-#                 ['click', 'input', 'scroll', 'popstate', 'pageshow', 'beforeunload', 'okPrompt'].forEach(type => {
-#                     let listener = window[`__${type}Listener`];
-#                     if (listener) {
-#                         if (type === 'popstate' || type === 'pageshow') {
-#                             window.removeEventListener(type, listener);
-#                         } else {
-#                             document.removeEventListener(type, listener, true);
-#                         }
-#                         console.log(`[INFO] Removed existing ${type} listener.`);
-#                     }
-#                 });
-
-#                 window.__userInteractionInjected__ = true;
-#                 window.__lastInjectedBody__ = document.body;
-
-#                 window.userInteractions = JSON.parse(sessionStorage.getItem('userInteractions') || '[]');
-#                 let lastRecordedValue = '';
-#                 let lastClickTimestamp = 0;
-#                 window.__processingPopstate__ = false;
-#                 let lastScrollY = window.scrollY;
-
-#                 const clickListener = function(event) {
-#                     if (event.__processed__) return;
-#                     const now = new Date().getTime();
-#                     if (now - lastClickTimestamp < 50) return;
-#                     lastClickTimestamp = now;
-#                     event.__processed__ = true;
-
-#                     let target = event.target.closest('a, img, [onclick], [data-nav], [role="option"], li, div, span') || event.target;
-#                     let rect = target.getBoundingClientRect();
-#                     let interaction = {
-#                         type: 'click',
-#                         target: target.tagName,
-#                         id: target.id,
-#                         class: target.className,
-#                         text: (target.innerText || target.value || '').slice(0, 100),
-#                         x: event.clientX,
-#                         y: event.clientY
-#                     };
-
-#                     const currentUrl = window.location.href.split('#')[0];
-#                     const targetUrl = (target.href || '').split('#')[0];
-
-#                     if (target.tagName.toLowerCase() === 'a' && target.href) {
-#                         if (currentUrl === targetUrl) {
-#                             window.userInteractions.push(interaction);
-#                             sessionStorage.setItem('userInteractions', JSON.stringify(window.userInteractions));
-#                         } else {
-#                             event.preventDefault();
-#                             window.userInteractions.push(interaction);
-#                             sessionStorage.setItem('userInteractions', JSON.stringify(window.userInteractions));
-#                             let clicks = JSON.parse(localStorage.getItem('navigationClicks') || '[]');
-#                             clicks.push(interaction);
-#                             localStorage.setItem('navigationClicks', JSON.stringify(clicks));
-#                             setTimeout(() => {
-#                                 window.location.href = target.href;
-#                             }, 300);
-#                         }
-#                     } else if (target.closest('form') && window.location.href.includes('google.com')) {
-#                         window.userInteractions.push(interaction);
-#                         sessionStorage.setItem('userInteractions', JSON.stringify(window.userInteractions));
-#                         event.preventDefault();
-#                         setTimeout(() => {
-#                             target.closest('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-#                         }, 300);
-#                     } else {
-#                         window.userInteractions.push(interaction);
-#                         sessionStorage.setItem('userInteractions', JSON.stringify(window.userInteractions));
-#                     }
-#                 };
-#                 window.__clickListener = clickListener;
-#                 document.addEventListener('click', clickListener, true);
-
-#                 // 添加對綠框覆蓋層的點擊監聽
-#                 const okPromptListener = function(event) {
-#                     if (event.target.id === 'ok_prompt_overlay') {
-#                         window.exitInteractionLoop = true;
-#                         event.stopPropagation();
-#                     }
-#                 };
-#                 window.__okPromptListener = okPromptListener;
-#                 document.addEventListener('click', okPromptListener, true);
-
-#                 const inputListener = function(event) {
-#                     if ((event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') && event.target.value !== lastRecordedValue) {
-#                         lastRecordedValue = event.target.value;
-#                         let interaction = {
-#                             type: 'input',
-#                             value: event.target.value.slice(0, 100),
-#                             target: event.target.tagName,
-#                             id: event.target.id,
-#                             class: event.target.className
-#                         };
-#                         window.userInteractions.push(interaction);
-#                         sessionStorage.setItem('userInteractions', JSON.stringify(window.userInteractions));
-#                     }
-#                 };
-#                 window.__inputListener = inputListener;
-#                 document.addEventListener('input', inputListener, true);
-
-#                 const scrollListener = function() {
-#                     if (window.scrollY !== lastScrollY) {
-#                         let interaction = {
-#                             type: 'scroll',
-#                             scrollY: window.scrollY
-#                         };
-#                         window.userInteractions.push(interaction);
-#                         sessionStorage.setItem('userInteractions', JSON.stringify(window.userInteractions));
-#                         lastScrollY = window.scrollY;
-#                     }
-#                 };
-#                 window.__scrollListener = scrollListener;
-#                 window.addEventListener('scroll', scrollListener);
-
-#                 const popstateListener = function(event) {
-#                     if (window.__processingPopstate__) {
-#                         console.log('[INFO] Ignoring popstate event during processing.');
-#                         return;
-#                     }
-#                     window.__processingPopstate__ = true;
-#                     let interaction = {
-#                         type: 'navigation',
-#                         action: 'back',
-#                         url: window.location.href
-#                     };
-#                     // 避免重複記錄
-#                     if (!window.userInteractions.some(i => i.type === 'navigation' && i.url === interaction.url && Math.abs(new Date(i.timestamp) - new Date(interaction.timestamp)) < 100)) {
-#                         window.userInteractions.push(interaction);
-#                         sessionStorage.setItem('userInteractions', JSON.stringify(window.userInteractions));
-#                         localStorage.setItem('pendingPopstateInteraction', JSON.stringify(interaction));
-#                         console.log('[INFO] Popstate interaction stored:', interaction);
-#                     }
-#                     setTimeout(() => {
-#                         window.__userInteractionInjected__ = false;
-#                         setupUserInteractionListener();
-#                         window.__processingPopstate__ = false;
-#                     }, 300);
-#                 };
-#                 window.__popstateListener = popstateListener;
-#                 window.addEventListener('popstate', popstateListener);
-
-#                 const pageshowListener = function(event) {
-#                     if (event.persisted) {
-#                         console.log('[INFO] Page restored from bfcache, reinjecting.');
-#                         let interaction = {
-#                             type: 'navigation',
-#                             action: 'back',
-#                             url: window.location.href
-#                         };
-#                         // 避免重複記錄
-#                         if (!window.userInteractions.some(i => i.type === 'navigation' && i.url === interaction.url && Math.abs(new Date(i.timestamp) - new Date(interaction.timestamp)) < 100)) {
-#                             window.userInteractions.push(interaction);
-#                             sessionStorage.setItem('userInteractions', JSON.stringify(window.userInteractions));
-#                             localStorage.setItem('pendingPopstateInteraction', JSON.stringify(interaction));
-#                             console.log('[INFO] Pageshow interaction stored:', interaction);
-#                         }
-#                         window.__userInteractionInjected__ = false;
-#                         setTimeout(() => {
-#                             setupUserInteractionListener();
-#                         }, 300);
-#                     }
-#                 };
-#                 window.__pageshowListener = pageshowListener;
-#                 window.addEventListener('pageshow', pageshowListener);
-
-#                 const beforeunloadListener = function() {
-#                     sessionStorage.setItem('userInteractions', JSON.stringify(window.userInteractions));
-#                     localStorage.setItem('navigationClicks', JSON.stringify([]));
-#                 };
-#                 window.__beforeunloadListener = beforeunloadListener;
-#                 window.addEventListener('beforeunload', beforeunloadListener);
-
-#                 (function recoverNavigation() {
-#                     const navClicks = JSON.parse(localStorage.getItem('navigationClicks') || '[]');
-#                     const pendingPopstate = JSON.parse(localStorage.getItem('pendingPopstateInteraction') || 'null');
-#                     const currentUrl = window.location.href;
-#                     if (pendingPopstate && pendingPopstate.url !== currentUrl) {
-#                         window.userInteractions.push(pendingPopstate);
-#                         sessionStorage.setItem('userInteractions', JSON.stringify(window.userInteractions));
-#                         localStorage.removeItem('pendingPopstateInteraction');
-#                     }
-#                     if (navClicks.length > 0) {
-#                         const lastClick = navClicks.pop();
-#                         window.userInteractions.push(lastClick);
-#                         sessionStorage.setItem('userInteractions', JSON.stringify(window.userInteractions));
-#                         localStorage.setItem('navigationClicks', JSON.stringify(navClicks));
-#                     }
-#                 })();
-#             }
-
-#             function monkeyPatchHistoryMethod(methodName) {
-#                 const original = history[methodName];
-#                 history[methodName] = function() {
-#                     const result = original.apply(this, arguments);
-#                     setTimeout(() => {
-#                         window.__userInteractionInjected__ = false;
-#                         setupUserInteractionListener();
-#                     }, 300);
-#                     return result;
-#                 };
-#             }
-
-#             setupUserInteractionListener();
-#             monkeyPatchHistoryMethod('pushState');
-#             monkeyPatchHistoryMethod('replaceState');
-
-#             window.addEventListener('load', function() {
-#                 setTimeout(() => {
-#                     window.__userInteractionInjected__ = false;
-#                     setupUserInteractionListener();
-#                 }, 300);
-#             });
-
-#             const observer = new MutationObserver(() => {
-#                 if (window.__lastInjectedBody__ !== document.body) {
-#                     window.__userInteractionInjected__ = false;
-#                     setupUserInteractionListener();
-#                 }
-#             });
-#             observer.observe(document.documentElement, { childList: true, subtree: true });
-#         })();
-#     """)
 
 def safe_inject(driver_task):
     while True:
